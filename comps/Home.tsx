@@ -11,35 +11,46 @@ interface HomeProps {
 }
 
 const Home = ({ products, bannerData }: HomeProps) => {
+  const [sortOrder, setSortOrder] = useState(""); // low-to-high | high-to-low
+  const [sortedProducts, setSortedProducts] = useState(products);
+
+  const handleSort = (order: string) => {
+    setSortOrder(order);
+    const sorted = [...products].sort((a, b) =>
+      order === "low" ? a.price - b.price : b.price - a.price
+    );
+    setSortedProducts(sorted);
+  };
 
   return (
     <main>
-      {/* === MAIN BANNER  */}
       <MainBanner banner={bannerData[0]} />
 
-      <section className="  mb-4 flex items-center flex-col">
-        <h1
-          className=" headTitle px-8 py-4 sm:py-2 sm:text-4xl text-2xl text-secondary
-         font-sans font-extrabold sm:rounded-t-3xl"
-        >
+      {/* === TITLE + SORT SELECT === */}
+      <section className="mb-4 flex flex-col sm:flex-row items-center justify-between w-full sm:w-3/4 mx-auto px-4">
+        <h1 className="headTitle sm:text-4xl text-2xl text-secondary font-extrabold">
           Best Selling Headphones
         </h1>
-        {/* <p className=" text-base text-secondary">Best in the Market</p> */}
+
+        {/* 🔽 Sort select */}
+        <select
+          value={sortOrder}
+          onChange={(e) => handleSort(e.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring"
+        >
+          <option value="">Sort by price</option>
+          <option value="low">Low to High</option>
+          <option value="high">High to Low</option>
+        </select>
       </section>
 
-      {/* === SHOW PRODUCTS  */}
-      <section
-        className=" grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4
-       lg:mx-20 overflow-hidden
-      "
-      >
-        {/* === MAP PRODUCTS  */}
-        {products?.map((products: ProductsTypes) => {
-          return <Products key={products._id} products={products} />;
-        })}
+      {/* === SHOW PRODUCTS === */}
+      <section className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-6 lg:mx-20">
+        {sortedProducts.map((product: ProductsTypes) => (
+          <Products key={product._id} products={product} />
+        ))}
       </section>
 
-      {/* ==== FOOTER BANNER  */}
       <FooterBanner bannerData={bannerData && bannerData[1]} />
     </main>
   );
