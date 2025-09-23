@@ -27,8 +27,8 @@ git clone https://github.com/Saddam2508/Teambuilder-test.git
 cd Teambuilder-test
 ```
 
-```npm install
-
+```
+npm install
 ```
 
 ```
